@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import initRoutes from "./src/routes";
+import connectDb from "./src/config/connectDatabase";
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 //   res.send("server on ...");
 // });
 initRoutes(app);
+connectDb();
 
 const port = process.env.PORT || 8888;
 const listener = app.listen(port, () => {
