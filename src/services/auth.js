@@ -1,6 +1,7 @@
 import db from "../models";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { raw } from "mysql2";
 import { v4 } from "uuid";
 require("dotenv").config();
 
@@ -35,6 +36,41 @@ export const registerService = ({ name, phone, password }) =>
           ? "Register is successfully !"
           : "This phone number already exists !",
         token: token || null,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+export const loginService = ({ phone, password }) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const response = await db.User.findOne({
+        // response sẽ nhận DL khi where true và null khi where false
+        where: { phone },
+        raw: true,
+      });
+
+      const isCorrectPassword =
+        response && bcrypt.compareSync(password, response.password);
+
+      const token =
+        isCorrectPassword &&
+        jwt.sign(
+          { id: response.id, phone: response.phone },
+          process.env.SECRET_KEY,
+          { expiresIn: "2d" }
+        );
+
+      resolve({
+        err: token ? 0 : 2,
+        msg: token
+          ? "Login is successfully !"
+          : response
+          ? "Incorrect password !"
+          : "This phone number not found !",
+        token: token || null,
+        // response,
       });
     } catch (error) {
       reject(error);
