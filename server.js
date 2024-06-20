@@ -1,10 +1,11 @@
 import express from "express";
-import dotenv from "dotenv";
+require("dotenv").config();
 import cors from "cors";
 import initRoutes from "./src/routes";
 import connectDb from "./src/config/connectDatabase";
+import generateCode from "./src/untils/generateCode";
 
-dotenv.config();
+console.log(generateCode("thành phố hà nội"));
 
 const app = express();
 app.use(

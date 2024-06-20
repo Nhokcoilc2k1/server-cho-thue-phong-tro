@@ -1,7 +1,6 @@
 import db from "../models";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { raw } from "mysql2";
 import { v4 } from "uuid";
 require("dotenv").config();
 
